@@ -5,6 +5,7 @@
 
 #include "asteroid.h"
 #include "player.h"
+#include "bullet.h"
 
 #define DELAY 0.5
 
@@ -41,9 +42,16 @@ void updateDrawFrame(){
 
     for(int i = 0; i < MAX_ASTEROIDS; i++){
         updateAsteroid(&asteroids[i]);
-        if(checkCollisionPlayer(&player, asteroids[i].position, 16 * asteroids[i].size)){
+        if(asteroids[i].active && checkCollisionPlayer(&player, asteroids[i].position, 16 * asteroids[i].size)){ // Check for collision with player
             player = createPlayer((Vector2){screenWidth/2, screenHeight/2});
         }
+        for(int j = 0; j < MAX_BULLETS; j++){
+            if(bullets[j].active && checkCollisionBullet(&bullets[j], asteroids[i].position, 16 * asteroids[i].size)){
+                destroyAsteroid(&asteroids[i]);
+                bullets[j].active = false;
+            }
+        }
+
     }
     updatePlayer(&player);
 
@@ -80,6 +88,11 @@ void updateDrawFrame(){
         for(int i = 0; i < MAX_ASTEROIDS; i++){
             drawAsteroid(&asteroids[i]);
             drawPlayer(&player);
+        }
+
+        for(int i = 0; i < MAX_BULLETS; i++){
+            updateBullet(&bullets[i]);
+            drawBullet(bullets[i]);
         }
 
     EndDrawing();

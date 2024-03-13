@@ -16,6 +16,7 @@ void inputPlayer(Player* player);
 void movePlayer(Player* player);
 void rotatePlayer(Player* player);
 bool checkCollisionPlayer(Player* player, Vector2 position, float radius);
+void shootPlayer(Player* player);
 void updatePlayer(Player* player);
 void drawPlayer(Player* player);
 

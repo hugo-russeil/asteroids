@@ -1,4 +1,5 @@
 #include "player.h"
+#include "bullet.h"
 
 Player createPlayer(Vector2 position){
     Player player = {
@@ -20,6 +21,9 @@ void inputPlayer(Player* player){
     } if (IsKeyDown(KEY_LEFT)) {
         player->rotationSpeed = -0.001;
     }
+    if (IsKeyPressed(KEY_SPACE)) {
+        shootPlayer(player);
+    }
     player->velocity = Vector2Scale(player->velocity, 0.9999);
     player->rotationSpeed *= 0.99;
 }
@@ -34,6 +38,10 @@ void rotatePlayer(Player* player){
 
 bool checkCollisionPlayer(Player* player, Vector2 position, float radius){
     return CheckCollisionCircles(player->position, 10, position, radius);
+}
+
+void shootPlayer(Player* player){
+    addBullet(player->position, Vector2Rotate((Vector2){1, 0}, player->rotation));
 }
 
 void updatePlayer(Player* player){
