@@ -27,8 +27,8 @@ void inputPlayer(Player* player){
     if (IsKeyPressed(KEY_SPACE)) {
         shootPlayer(player);
     }
-    player->velocity = Vector2Scale(player->velocity, 0.9999);
-    player->rotationSpeed *= 0.99;
+    player->velocity = Vector2Scale(player->velocity, 0.9999); // Slow down the player
+    player->rotationSpeed *= 0.99; // Slow down the rotation
 }
 
 void movePlayer(Player* player){
@@ -51,7 +51,7 @@ void movePlayer(Player* player){
 }
 
 void rotatePlayer(Player* player){
-    player->rotation += player->rotationSpeed;
+    player->rotation += player->rotationSpeed; // Apply the rotation
 }
 
 bool checkCollisionPlayer(Player* player, Vector2 position, float radius){
@@ -59,7 +59,7 @@ bool checkCollisionPlayer(Player* player, Vector2 position, float radius){
 }
 
 void shootPlayer(Player* player){
-    addBullet(player->position, Vector2Rotate((Vector2){1, 0}, player->rotation));
+    addBullet(player->position, Vector2Rotate((Vector2){1, 0}, player->rotation)); // Add a bullet going the direction the player is facing
 }
 
 void updatePlayer(Player* player){
@@ -69,7 +69,7 @@ void updatePlayer(Player* player){
 }
 
 void drawPlayer(Player* player){
-    float rotation = (player->rotation) + 90 * PI / 180;
+    float rotation = (player->rotation) + 90 * PI / 180; // Adding 90 degrees (converted to radians) to the rotation to make the player face right
     DrawTriangleLines(
         Vector2Add(player->position, Vector2Rotate((Vector2){-10, 10}, rotation)),
         Vector2Add(player->position, Vector2Rotate((Vector2){0, -20}, rotation)),
