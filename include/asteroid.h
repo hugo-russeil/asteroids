@@ -36,6 +36,7 @@ Vector2 generateOffScreenPosition();
 Vector2 calculateAsteroidTrajectory(Vector2 position);
 void updateAsteroid(Asteroid* asteroid);
 void drawAsteroid(Asteroid* asteroid);
+void splitAsteroid(Asteroid* asteroid);
 void destroyAsteroid(Asteroid* asteroid);
 
 #endif // ASTEROID_H

@@ -73,6 +73,18 @@ void updateAsteroid(Asteroid* asteroid){
     asteroid->rotation += asteroid->rotationSpeed * GetFrameTime();
 }
 
+void splitAsteroid(Asteroid* asteroid){
+    if(asteroid->size == ASTEROID_SMALL){
+        destroyAsteroid(asteroid);
+        return;
+    }
+    Vector2 vel = Vector2Rotate(asteroid->velocity, ASTEROID_TRAJECTORY_ANGLE);
+    addAsteroid(asteroid->position, vel, asteroid->size / 2);
+    vel = Vector2Rotate(asteroid->velocity, -ASTEROID_TRAJECTORY_ANGLE);
+    addAsteroid(asteroid->position, vel, asteroid->size / 2);
+    destroyAsteroid(asteroid);
+}
+
 void drawAsteroid(Asteroid* asteroid){
     if(!asteroid->active) return;
     DrawPolyLines(asteroid->position, 7, 16 * asteroid->size, asteroid->rotation, WHITE);

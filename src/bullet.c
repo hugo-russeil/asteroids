@@ -26,6 +26,7 @@ void addBullet(Vector2 position, Vector2 velocity){
 }
 
 bool checkCollisionBullet(Bullet* bullet, Vector2 position, float radius){
+    if(!bullet->active) return false;
     return CheckCollisionCircles(bullet->position, 2, position, radius);
 
 }
@@ -42,3 +43,5 @@ void drawBullet(Bullet bullet){
     if(!bullet.active) return;
     DrawCircleV(bullet.position, 2, WHITE);
 }
+
+

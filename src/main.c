@@ -46,9 +46,9 @@ void updateDrawFrame(){
             player = createPlayer((Vector2){screenWidth/2, screenHeight/2});
         }
         for(int j = 0; j < MAX_BULLETS; j++){
-            if(bullets[j].active && checkCollisionBullet(&bullets[j], asteroids[i].position, 16 * asteroids[i].size)){
-                destroyAsteroid(&asteroids[i]);
+            if(asteroids[i].active && bullets[j].active && checkCollisionBullet(&bullets[j], asteroids[i].position, 16 * asteroids[i].size)){
                 bullets[j].active = false;
+                splitAsteroid(&asteroids[i]);
             }
         }
 
