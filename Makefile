@@ -5,8 +5,9 @@ SRC_DIR = src
 OBJ_DIR = obj
 INCLUDE_DIR = include
 TARGET = main
+SOURCES = $(wildcard $(SRC_DIR)/*.c)
 
-$(OBJ_DIR)/$(TARGET): $(SRC_DIR)/main.c $(SRC_DIR)/asteroid.c
+$(OBJ_DIR)/$(TARGET): $(SOURCES)
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 	rm -f $(SRC_DIR)/*.o
 

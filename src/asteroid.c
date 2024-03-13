@@ -4,8 +4,8 @@
 
 #include <stdlib.h>
 
-static const int screenWidth = 600;
-static const int screenHeight = 600;
+static const int screenWidth = 1200;
+static const int screenHeight = 800;
 
 Asteroid asteroids[MAX_ASTEROIDS] = {0};
 
@@ -75,7 +75,7 @@ void updateAsteroid(Asteroid* asteroid){
 
 void drawAsteroid(Asteroid* asteroid){
     if(!asteroid->active) return;
-    DrawPolyLines(asteroid->position, 3, 16 * asteroid->size, asteroid->rotation, WHITE);
+    DrawPolyLines(asteroid->position, 7, 16 * asteroid->size, asteroid->rotation, WHITE);
 }
 
 void destroyAsteroid(Asteroid* asteroid){
