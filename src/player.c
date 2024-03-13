@@ -1,12 +1,15 @@
 #include "player.h"
 #include "bullet.h"
 
+#include <stdlib.h>
+
 Player createPlayer(Vector2 position){
     Player player = {
         .position = position,
         .velocity = (Vector2){1, 0},
         .rotation = 0,
-        .rotationSpeed = 0
+        .rotationSpeed = 0,
+        .isDead = false
     };
     return player;
 }

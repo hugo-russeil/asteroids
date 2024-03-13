@@ -40,60 +40,71 @@ void updateDrawFrame(){
         debug = !debug;
     }
 
-    for(int i = 0; i < MAX_ASTEROIDS; i++){
-        updateAsteroid(&asteroids[i]);
-        if(asteroids[i].active && checkCollisionPlayer(&player, asteroids[i].position, 16 * asteroids[i].size)){ // Check for collision with player
-            player = createPlayer((Vector2){screenWidth/2, screenHeight/2});
-        }
-        for(int j = 0; j < MAX_BULLETS; j++){
-            if(asteroids[i].active && bullets[j].active && checkCollisionBullet(&bullets[j], asteroids[i].position, 16 * asteroids[i].size)){
-                bullets[j].active = false;
-                splitAsteroid(&asteroids[i]);
-            }
-        }
-
-    }
-    updatePlayer(&player);
-
-    if(lastCreationTime + DELAY < GetTime()){
-        Vector2 pos = generateOffScreenPosition();
-        Vector2 vel = calculateAsteroidTrajectory(pos);
-
-        addAsteroid(pos, vel, GetRandomValue(ASTEROID_SMALL, ASTEROID_LARGE));
-        lastCreationTime = GetTime();
-    }
-
-    BeginDrawing();
-
-        ClearBackground(BLACK);
-
-        if(debug){
-            Vector2 lineStart;
-            Vector2 lineEnd;
-            for(int i = 0; i < MAX_ASTEROIDS; i++){
-                lineStart = asteroids[i].position;
-                lineEnd = Vector2Add(asteroids[i].position, asteroids[i].velocity);
-                DrawLineV(lineStart, lineEnd, RED);
-                DrawPolyLines(asteroids[i].position, 4, 16 * asteroids[i].size, 0, YELLOW);
-            }
-            lineStart = player.position;
-            lineEnd = Vector2Add(player.position, player.velocity);
-            DrawLineV(lineStart, lineEnd, RED);
-            
-            Vector2 forwardDir = { cos(player.rotation), sin(player.rotation) };
-            Vector2 forwardVecEnd = Vector2Add(player.position, Vector2Scale(forwardDir, 50)); // 50 is the length of the vector
-            DrawLineV(player.position, forwardVecEnd, GREEN);
-        }
+    if(!player.isDead){
+        
 
         for(int i = 0; i < MAX_ASTEROIDS; i++){
-            drawAsteroid(&asteroids[i]);
-            drawPlayer(&player);
+            updateAsteroid(&asteroids[i]);
+            if(asteroids[i].active && checkCollisionPlayer(&player, asteroids[i].position, 16 * asteroids[i].size)){ // Check for collision with player
+                player.isDead = true;
+            }
+            for(int j = 0; j < MAX_BULLETS; j++){
+                if(asteroids[i].active && bullets[j].active && checkCollisionBullet(&bullets[j], asteroids[i].position, 16 * asteroids[i].size)){
+                    bullets[j].active = false;
+                    splitAsteroid(&asteroids[i]);
+                }
+            }
+
+        }
+        updatePlayer(&player);
+
+        if(lastCreationTime + DELAY < GetTime()){
+            Vector2 pos = generateOffScreenPosition();
+            Vector2 vel = calculateAsteroidTrajectory(pos);
+
+            addAsteroid(pos, vel, GetRandomValue(ASTEROID_SMALL, ASTEROID_LARGE));
+            lastCreationTime = GetTime();
         }
 
-        for(int i = 0; i < MAX_BULLETS; i++){
-            updateBullet(&bullets[i]);
-            drawBullet(bullets[i]);
-        }
+        BeginDrawing();
 
-    EndDrawing();
+            ClearBackground(BLACK);
+
+            if(debug){
+                Vector2 lineStart;
+                Vector2 lineEnd;
+                for(int i = 0; i < MAX_ASTEROIDS; i++){
+                    if(!asteroids[i].active) continue;
+                    lineStart = asteroids[i].position;
+                    lineEnd = Vector2Add(asteroids[i].position, asteroids[i].velocity);
+                    DrawLineV(lineStart, lineEnd, RED);
+                    DrawPolyLines(asteroids[i].position, 4, 16 * asteroids[i].size, 0, YELLOW);
+                }
+                lineStart = player.position;
+                lineEnd = Vector2Add(player.position, player.velocity);
+                DrawLineV(lineStart, lineEnd, RED);
+                
+                Vector2 forwardDir = { cos(player.rotation), sin(player.rotation) };
+                Vector2 forwardVecEnd = Vector2Add(player.position, Vector2Scale(forwardDir, 50)); // 50 is the length of the vector
+                DrawLineV(player.position, forwardVecEnd, GREEN);
+            }
+
+            for(int i = 0; i < MAX_ASTEROIDS; i++){
+                drawAsteroid(&asteroids[i]);
+                drawPlayer(&player);
+            }
+
+            for(int i = 0; i < MAX_BULLETS; i++){
+                updateBullet(&bullets[i]);
+                drawBullet(bullets[i]);
+            }
+
+        EndDrawing();
+    }
+    else{
+        BeginDrawing();
+            ClearBackground(BLACK); 
+            DrawText("Game Over", screenWidth/2 - MeasureText("Game Over", 40)/2, screenHeight/2 - 40, 40, WHITE);
+        EndDrawing();
+    }
 }

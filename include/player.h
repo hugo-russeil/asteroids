@@ -9,6 +9,7 @@ typedef struct {
     Vector2 velocity;
     float rotation;
     float rotationSpeed;
+    bool isDead;
 }Player;
 
 Player createPlayer(Vector2 position);
