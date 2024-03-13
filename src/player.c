@@ -32,7 +32,22 @@ void inputPlayer(Player* player){
 }
 
 void movePlayer(Player* player){
-    player->position = Vector2Add(player->position, Vector2Scale(player->velocity, GetFrameTime()));
+    Vector2 newPosition = Vector2Add(player->position, Vector2Scale(player->velocity, GetFrameTime()));
+
+    // Check if the new position would be outside the screen
+    if (newPosition.x < 0) {
+        newPosition.x = 0;
+    } else if (newPosition.x > GetScreenWidth()) {
+        newPosition.x = GetScreenWidth(); // Cancels out any horizontal velocity that would take the player off the screen
+    }
+
+    if (newPosition.y < 0) {
+        newPosition.y = 0;
+    } else if (newPosition.y > GetScreenHeight()) {
+        newPosition.y = GetScreenHeight(); // Cancels out any vertical velocity that would take the player off the screen
+    }
+
+    player->position = newPosition; // Apply the new position
 }
 
 void rotatePlayer(Player* player){
