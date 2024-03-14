@@ -5,20 +5,21 @@
 
 Player createPlayer(Vector2 position){
     Player player = {
-        .position = position,
-        .velocity = (Vector2){1, 0},
+        .base.position = position,
+        .base.velocity = (Vector2){1, 0},
+        .base.hitbox = (Rectangle){position.x, position.y, 20, 20},
         .rotation = 0,
         .rotationSpeed = 0,
-        .isDead = false
+        .base.active = true
     };
     return player;
 }
 
 void inputPlayer(Player* player){
     if (IsKeyDown(KEY_UP)) {
-        player->velocity = Vector2Add(player->velocity, Vector2Rotate((Vector2){0.1, 0}, player->rotation));
+        player->base.velocity = Vector2Add(player->base.velocity, Vector2Rotate((Vector2){0.1, 0}, player->rotation));
     } if (IsKeyDown(KEY_DOWN)) {
-        player->velocity = Vector2Add(player->velocity, Vector2Rotate((Vector2){-0.1, 0}, player->rotation));
+        player->base.velocity = Vector2Add(player->base.velocity, Vector2Rotate((Vector2){-0.1, 0}, player->rotation));
     } if (IsKeyDown(KEY_RIGHT)) {
         player->rotationSpeed = 0.001;
     } if (IsKeyDown(KEY_LEFT)) {
@@ -27,12 +28,12 @@ void inputPlayer(Player* player){
     if (IsKeyPressed(KEY_SPACE)) {
         shootPlayer(player);
     }
-    player->velocity = Vector2Scale(player->velocity, 0.9999); // Slow down the player
-    player->rotationSpeed *= 0.99; // Slow down the rotation
+    player->base.velocity = Vector2Scale(player->base.velocity, 0.9999); // Gradually slow down the player by slightly scaling down the velocity each frame
+    player->rotationSpeed *= 0.99; // Slow down the rotation speed by slightly scaling it down each frame
 }
 
 void movePlayer(Player* player){
-    Vector2 newPosition = Vector2Add(player->position, Vector2Scale(player->velocity, GetFrameTime()));
+    Vector2 newPosition = Vector2Add(player->base.position, Vector2Scale(player->base.velocity, GetFrameTime()));
 
     // Check if the new position would be outside the screen
     if (newPosition.x < 0) {
@@ -47,7 +48,7 @@ void movePlayer(Player* player){
         newPosition.y = GetScreenHeight(); // Cancels out any vertical velocity that would take the player off the screen
     }
 
-    player->position = newPosition; // Apply the new position
+    player->base.position = newPosition; // Apply the new position
 }
 
 void rotatePlayer(Player* player){
@@ -55,25 +56,28 @@ void rotatePlayer(Player* player){
 }
 
 bool checkCollisionPlayer(Player* player, Vector2 position, float radius){
-    return CheckCollisionCircles(player->position, 10, position, radius);
+    return CheckCollisionCircles(player->base.position, 10, position, radius);
 }
 
 void shootPlayer(Player* player){
-    addBullet(player->position, Vector2Rotate((Vector2){1, 0}, player->rotation)); // Add a bullet going the direction the player is facing
+    addBullet(player->base.position, Vector2Rotate((Vector2){0.2, 0}, player->rotation), true); // Add a bullet going the direction the player is facing
 }
 
 void updatePlayer(Player* player){
     inputPlayer(player);
     movePlayer(player);
     rotatePlayer(player);
+    // Update the hitbox
+    player->base.hitbox.x = player->base.position.x - 10;
+    player->base.hitbox.y = player->base.position.y - 10;
 }
 
 void drawPlayer(Player* player){
     float rotation = (player->rotation) + 90 * PI / 180; // Adding 90 degrees (converted to radians) to the rotation to make the player face right
     DrawTriangleLines(
-        Vector2Add(player->position, Vector2Rotate((Vector2){-10, 10}, rotation)),
-        Vector2Add(player->position, Vector2Rotate((Vector2){0, -20}, rotation)),
-        Vector2Add(player->position, Vector2Rotate((Vector2){10, 10}, rotation)),
+        Vector2Add(player->base.position, Vector2Rotate((Vector2){-10, 10}, rotation)),
+        Vector2Add(player->base.position, Vector2Rotate((Vector2){0, -20}, rotation)),
+        Vector2Add(player->base.position, Vector2Rotate((Vector2){10, 10}, rotation)),
         WHITE  
     );
 }

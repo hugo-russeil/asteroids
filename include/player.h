@@ -4,13 +4,15 @@
 #include "raylib.h"
 #include "raymath.h"
 
+#include "gameEntity.h"
+
 typedef struct {
-    Vector2 position;
-    Vector2 velocity;
+    GameEntity base;
     float rotation;
     float rotationSpeed;
-    bool isDead;
 }Player;
+
+extern Player player;
 
 Player createPlayer(Vector2 position);
 void inputPlayer(Player* player);

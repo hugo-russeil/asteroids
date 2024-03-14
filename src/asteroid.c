@@ -1,6 +1,7 @@
 #include "asteroid.h"
 #include "raylib.h"
 #include "raymath.h"
+#include "utils.h"
 
 #include <stdlib.h>
 
@@ -11,10 +12,11 @@ Asteroid asteroids[MAX_ASTEROIDS] = {0}; // The asteroids will be stored in an a
 
 Asteroid createAsteroid(Vector2 position, Vector2 velocity, AsteroidSize size){
     Asteroid asteroid = {
-        .active = true,
+        .base.position = position,
+        .base.velocity = velocity,
+        .base.hitbox = (Rectangle){position.x, position.y, 32 * size, 32 * size},
+        .base.active = true,
         .size = size,
-        .position = position,
-        .velocity = velocity,
         .rotation = GetRandomValue(0, 360),
         .rotationSpeed = GetRandomValue(ASTEROID_MIN_ROT_SPEED, ASTEROID_MAX_ROT_SPEED),
         .creationTime = GetTime()
@@ -24,37 +26,12 @@ Asteroid createAsteroid(Vector2 position, Vector2 velocity, AsteroidSize size){
 
 void addAsteroid(Vector2 position, Vector2 velocity, AsteroidSize size){
     for(int i = 0; i < MAX_ASTEROIDS; i++){
-        if(asteroids[i].active){
+        if(asteroids[i].base.active){
             continue; // Don't overwrite active asteroids
         }
         asteroids[i] = createAsteroid(position, velocity, size);
         break;
     }
-}
-
-Vector2 generateOffScreenPosition(){
-    int side = GetRandomValue(0, 3);
-    int x = 0;
-    int y = 0;
-    switch(side){
-        case 0:
-            x = GetRandomValue(0, screenWidth);
-            y = 0;
-            break;
-        case 1:
-            x = screenWidth;
-            y = GetRandomValue(0, screenHeight);
-            break;
-        case 2:
-            x = GetRandomValue(0, screenWidth);
-            y = screenHeight;
-            break;
-        case 3:
-            x = 0;
-            y = GetRandomValue(0, screenHeight);
-            break;
-    }
-    return (Vector2){x, y};
 }
 
 Vector2 calculateAsteroidTrajectory(Vector2 position){
@@ -64,33 +41,39 @@ Vector2 calculateAsteroidTrajectory(Vector2 position){
 }
 
 void updateAsteroid(Asteroid* asteroid){
-    if(!asteroid->active) return; // Don't update inactive asteroids
+    if(!asteroid->base.active) return; // Don't update inactive asteroids
     if(asteroid->creationTime + ASTEROID_LIFESPAN < GetTime()){
         destroyAsteroid(asteroid); // Destroy the asteroid if it's been alive for too long (they must be off screen by now)
         return;
     }
-    asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
+    asteroid->base.position = Vector2Add(asteroid->base.position, Vector2Scale(asteroid->base.velocity, GetFrameTime()));
     asteroid->rotation += asteroid->rotationSpeed * GetFrameTime();
+    //update the hitbox
+    asteroid->base.hitbox.x = asteroid->base.position.x - 16 * asteroid->size;
+    asteroid->base.hitbox.y = asteroid->base.position.y - 16 * asteroid->size;
 }
 
-void splitAsteroid(Asteroid* asteroid){
+int splitAsteroid(Asteroid* asteroid){
+    int points = 40 / asteroid->size; // Shooting an asteroid earns the player points. Smaller asteroids are worth more points
+    
     if(asteroid->size == ASTEROID_SMALL){
         destroyAsteroid(asteroid);
-        return;
+        return points;
     }
     // Split the asteroid into two smaller asteroids, going in slightly different directions
-    Vector2 vel = Vector2Rotate(asteroid->velocity, ASTEROID_TRAJECTORY_ANGLE);
-    addAsteroid(asteroid->position, vel, asteroid->size / 2);
-    vel = Vector2Rotate(asteroid->velocity, -ASTEROID_TRAJECTORY_ANGLE);
-    addAsteroid(asteroid->position, vel, asteroid->size / 2);
+    Vector2 vel = Vector2Rotate(asteroid->base.velocity, ASTEROID_TRAJECTORY_ANGLE);
+    addAsteroid(asteroid->base.position, vel, asteroid->size / 2);
+    vel = Vector2Rotate(asteroid->base.velocity, -ASTEROID_TRAJECTORY_ANGLE);
+    addAsteroid(asteroid->base.position, vel, asteroid->size / 2);
     destroyAsteroid(asteroid);
+    return points;
 }
 
 void drawAsteroid(Asteroid* asteroid){
-    if(!asteroid->active) return;
-    DrawPolyLines(asteroid->position, 7, 16 * asteroid->size, asteroid->rotation, WHITE); // Draw a heptagon with a radius of 16 * asteroid->size
+    if(!asteroid->base.active) return;
+    DrawPolyLines(asteroid->base.position, 7, 16 * asteroid->size, asteroid->rotation, WHITE); // Draw a heptagon with a radius of 16 * asteroid->size
 }
 
 void destroyAsteroid(Asteroid* asteroid){
-    asteroid->active = false; // Deactivate the asteroid so it will eventually be overwritten by a new one
+    asteroid->base.active = false; // Deactivate the asteroid so it will eventually be overwritten by a new one
 }

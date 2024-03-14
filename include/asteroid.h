@@ -4,6 +4,8 @@
 #include "raylib.h"
 #include "raymath.h"
 
+#include "gameEntity.h"
+
 #define ASTEROID_LIFESPAN 10
 #define ASTEROID_MIN_ROT_SPEED -240
 #define ASTEROID_MAX_ROT_SPEED 240
@@ -19,10 +21,8 @@ typedef enum asteroidSize {
 } AsteroidSize;
 
 typedef struct asteroid {
-    bool active;
+    GameEntity base;
     AsteroidSize size;
-    Vector2 position;
-    Vector2 velocity;
     float rotation;
     float rotationSpeed;
     float creationTime;
@@ -36,7 +36,7 @@ Vector2 generateOffScreenPosition();
 Vector2 calculateAsteroidTrajectory(Vector2 position);
 void updateAsteroid(Asteroid* asteroid);
 void drawAsteroid(Asteroid* asteroid);
-void splitAsteroid(Asteroid* asteroid);
+int splitAsteroid(Asteroid* asteroid);
 void destroyAsteroid(Asteroid* asteroid);
 
 #endif // ASTEROID_H
