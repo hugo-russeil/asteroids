@@ -23,6 +23,9 @@ void updateDrawFrame();
 Player player;
 
 int main(){
+
+    SetTargetFPS(144);
+
     srand(time(NULL));
 
     player = createPlayer((Vector2){screenWidth/2, screenHeight/2}); // Create the player in the middle of the screen
@@ -122,10 +125,11 @@ void updateDrawFrame(){
             if(debug){
                 drawHitboxes(); // Draw the hitboxes of the player, asteroids and saucers
                 drawVelocities(); // Draw the velocities of the player, asteroids and saucers
+                DrawText(TextFormat("FPS: %i", GetFPS()), 10, 40, 20, WHITE); // Display the current FPS
             }
 
             drawScore();
-
+            
             for(int i = 0; i < MAX_ASTEROIDS; i++){
                 drawAsteroid(&asteroids[i]); // Draw every active asteroid in the array
             }

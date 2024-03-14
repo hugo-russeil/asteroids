@@ -34,7 +34,7 @@ bool checkCollisionBullet(Bullet* bullet, Vector2 position, float radius){
 
 void updateBullet(Bullet* bullet){ 
     if(!bullet->base.active) return; // If the bullet is not active, don't update it
-    bullet->base.position = Vector2Add(bullet->base.position, bullet->base.velocity);
+    bullet->base.position = Vector2Add(bullet->base.position, Vector2Scale(bullet->base.velocity, GetFrameTime()));
     if(bullet->base.position.x > GetScreenWidth() || bullet->base.position.x < 0 || bullet->base.position.y > GetScreenHeight() || bullet->base.position.y < 0){
         bullet->base.active = false; // Deactivate the bullet as soon as it goes off screen
     }

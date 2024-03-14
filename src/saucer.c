@@ -31,7 +31,7 @@ void addSaucer(Vector2 position){
 void shootSaucer(Saucer* saucer){
     if(!saucer->base.active) return; // if the saucer is not active, return
     Vector2 direction = Vector2Normalize(Vector2Subtract(player.base.position, saucer->base.position));
-    addBullet(saucer->base.position, Vector2Scale(direction, 0.2), false);
+    addBullet(saucer->base.position, Vector2Scale(direction, 1200), false);
 }
 
 void updateSaucer(Saucer* saucer){
@@ -39,7 +39,7 @@ void updateSaucer(Saucer* saucer){
     Vector2 direction = Vector2Normalize(Vector2Subtract(player.base.position, saucer->base.position)); // Saucer moves towards the player
     if(saucer->cooldown <= 0){
         shootSaucer(saucer);
-        saucer->cooldown = 5;
+        saucer->cooldown = 5; // Apply cooldown as to not destroy the player instantly
     }
     saucer->cooldown -= GetFrameTime();
     saucer->base.velocity = Vector2Scale(direction, SAUCER_SPEED);
@@ -48,6 +48,7 @@ void updateSaucer(Saucer* saucer){
     saucer->base.hitbox.y = saucer->base.position.y - 10;
 }
 
+// There is probably a better way to do this, but idk 
 void drawSaucer(Saucer saucer){
     if(saucer.base.active){
         // Draw the base of the saucer as an elongated hexagon

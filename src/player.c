@@ -17,19 +17,19 @@ Player createPlayer(Vector2 position){
 
 void inputPlayer(Player* player){
     if (IsKeyDown(KEY_UP)) {
-        player->base.velocity = Vector2Add(player->base.velocity, Vector2Rotate((Vector2){0.1, 0}, player->rotation));
+        player->base.velocity = Vector2Add(player->base.velocity, Vector2Rotate((Vector2){5, 0}, player->rotation));
     } if (IsKeyDown(KEY_DOWN)) {
-        player->base.velocity = Vector2Add(player->base.velocity, Vector2Rotate((Vector2){-0.1, 0}, player->rotation));
+        player->base.velocity = Vector2Add(player->base.velocity, Vector2Rotate((Vector2){-5, 0}, player->rotation));
     } if (IsKeyDown(KEY_RIGHT)) {
-        player->rotationSpeed = 0.001;
+        player->rotationSpeed = 0.03;
     } if (IsKeyDown(KEY_LEFT)) {
-        player->rotationSpeed = -0.001;
+        player->rotationSpeed = -0.03;
     }
     if (IsKeyPressed(KEY_SPACE)) {
         shootPlayer(player);
     }
-    player->base.velocity = Vector2Scale(player->base.velocity, 0.9999); // Gradually slow down the player by slightly scaling down the velocity each frame
-    player->rotationSpeed *= 0.99; // Slow down the rotation speed by slightly scaling it down each frame
+    player->base.velocity = Vector2Scale(player->base.velocity, 0.99); // Gradually slow down the player by slightly scaling down the velocity each frame
+    player->rotationSpeed *= 0.9; // Slow down the rotation speed by slightly scaling it down each frame
 }
 
 void movePlayer(Player* player){
@@ -60,7 +60,7 @@ bool checkCollisionPlayer(Player* player, Vector2 position, float radius){
 }
 
 void shootPlayer(Player* player){
-    addBullet(player->base.position, Vector2Rotate((Vector2){0.2, 0}, player->rotation), true); // Add a bullet going the direction the player is facing
+    addBullet(player->base.position, Vector2Rotate((Vector2){1200, 0}, player->rotation), true); // Add a bullet going the direction the player is facing
 }
 
 void updatePlayer(Player* player){
@@ -78,6 +78,6 @@ void drawPlayer(Player* player){
         Vector2Add(player->base.position, Vector2Rotate((Vector2){-10, 10}, rotation)),
         Vector2Add(player->base.position, Vector2Rotate((Vector2){0, -20}, rotation)),
         Vector2Add(player->base.position, Vector2Rotate((Vector2){10, 10}, rotation)),
-        WHITE  
+        WHITE
     );
 }
