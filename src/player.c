@@ -74,10 +74,11 @@ void updatePlayer(Player* player){
 
 void drawPlayer(Player* player){
     float rotation = (player->rotation) + 90 * PI / 180; // Adding 90 degrees (converted to radians) to the rotation to make the player face right
-    DrawTriangleLines(
-        Vector2Add(player->base.position, Vector2Rotate((Vector2){-10, 10}, rotation)),
-        Vector2Add(player->base.position, Vector2Rotate((Vector2){0, -20}, rotation)),
-        Vector2Add(player->base.position, Vector2Rotate((Vector2){10, 10}, rotation)),
-        WHITE
-    );
+
+    // Draw the lines of the ship
+    DrawLineV(Vector2Add(player->base.position, Vector2Rotate((Vector2){0, -20}, rotation)), Vector2Add(player->base.position, Vector2Rotate((Vector2){-10, 10}, rotation)), WHITE); // Top to bottom left
+    DrawLineV(Vector2Add(player->base.position, Vector2Rotate((Vector2){-10, 10}, rotation)), Vector2Add(player->base.position, Vector2Rotate((Vector2){-5, 0}, rotation)), WHITE); // Bottom left to middle left
+    DrawLineV(Vector2Add(player->base.position, Vector2Rotate((Vector2){-5, 0}, rotation)), Vector2Add(player->base.position, Vector2Rotate((Vector2){5, 0}, rotation)), WHITE); // Middle left to middle right
+    DrawLineV(Vector2Add(player->base.position, Vector2Rotate((Vector2){5, 0}, rotation)), Vector2Add(player->base.position, Vector2Rotate((Vector2){10, 10}, rotation)), WHITE); // Middle right to bottom right
+    DrawLineV(Vector2Add(player->base.position, Vector2Rotate((Vector2){10, 10}, rotation)), Vector2Add(player->base.position, Vector2Rotate((Vector2){0, -20}, rotation)), WHITE); // Bottom right to top
 }
