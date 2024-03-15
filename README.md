@@ -38,4 +38,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Credits
 
-- Idea inspired by a [YouTube Video](https://youtu.be/abIlGCx_Yq8?si=tHLUWqyTh8SWSTGF) from [Andrew Hamel Codes](https://www.youtube.com/@andrewhamelcodes712) of which i followed the first part before doing my own thing.
+- Idea inspired by a [YouTube Video](https://youtu.be/abIlGCx_Yq8?si=tHLUWqyTh8SWSTGF) from [Andrew Hamel Codes](https://www.youtube.com/@andrewhamelcodes712) of which I followed the first part before doing my own thing.
