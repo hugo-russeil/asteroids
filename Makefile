@@ -1,17 +1,26 @@
 CC = gcc
+CC_WIN = i686-w64-mingw32-gcc
 CFLAGS = -I ~/raylib/src -I $(INCLUDE_DIR) -L ~/raylib/release/libs/linux
 LDFLAGS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+LDFLAGS_WIN = /usr/local/lib/libraylibwin.a -lgdi32 -lwinmm -luser32 -lm
 SRC_DIR = src
-OBJ_DIR = obj
 INCLUDE_DIR = include
-TARGET = main
+TARGET = asteroids
+TARGET_WIN = asteroids.exe
 SOURCES = $(wildcard $(SRC_DIR)/*.c)
 
-$(OBJ_DIR)/$(TARGET): $(SOURCES)
+all: $(TARGET) $(TARGET_WIN)
+
+$(TARGET): $(SOURCES)
 	$(CC) $(CFLAGS) $^ $(LDFLAGS) -o $@
 	rm -f $(SRC_DIR)/*.o
 
-.PHONY: clean
+$(TARGET_WIN): $(SOURCES)
+	$(CC_WIN) $(CFLAGS) $^ $(LDFLAGS_WIN) -o $@
+	rm -f $(SRC_DIR)/*.o
+
+.PHONY: clean all
 
 clean:
-	rm -f $(OBJ_DIR)/$(TARGET)
+	rm -f $(TARGET)
+	rm -f $(TARGET_WIN)
