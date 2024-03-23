@@ -18,6 +18,11 @@ make
 
 Ensure you have raylib installed on your system. If not, you can check out [raylib's website](https://www.raylib.com/).
 
+## Precompiled Binaries
+
+If you don't want to compile the game yourself, you can download precompiled binaries from the [releases page](https://github.com/hugo-russeil/asteroids/releases/). There are versions available for both Windows and Linux.
+
+
 ## Usage
 The keys to control the game are as follows:
 - the arrow keys to move your spaceship
