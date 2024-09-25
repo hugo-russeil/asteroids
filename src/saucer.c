@@ -28,10 +28,27 @@ void addSaucer(Vector2 position){
     }
 }
 
+#include <stdlib.h> // For rand() and RAND_MAX
+
 void shootSaucer(Saucer* saucer){
     if(!saucer->base.active) return; // if the saucer is not active, return
+
+    // Calculate the direction towards the player
     Vector2 direction = Vector2Normalize(Vector2Subtract(player.base.position, saucer->base.position));
-    addBullet(saucer->base.position, Vector2Scale(direction, 1200), false);
+
+    // Generate a small random angle offset (e.g., between -5 and 5 degrees)
+    float angleOffset = ((rand() % 11) - 5) * (PI / 180.0f); // Convert degrees to radians
+
+    // Apply the angle offset to the direction vector
+    float cosAngle = cosf(angleOffset);
+    float sinAngle = sinf(angleOffset);
+    Vector2 offsetDirection = {
+            direction.x * cosAngle - direction.y * sinAngle,
+            direction.x * sinAngle + direction.y * cosAngle
+    };
+
+    // Shoot the bullet with the offset direction
+    addBullet(saucer->base.position, Vector2Scale(offsetDirection, 1200), false);
 }
 
 void updateSaucer(Saucer* saucer){
